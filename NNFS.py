@@ -1,18 +1,28 @@
-inputs = [1, 2, 3, 2.5]
+import numpy as np
+from SpiralData import spiral_data
 
-weights = [
-        [ 0.2, 0.8, -0.5, 1 ],
-        [ 0.5, -0.91, 0.26, -0.5 ],
-        [ -0.26, -0.27, 0.17, 0.87 ]
-    ]
+np.random.seed(0)
 
-biases = [2, 3, 0.5]
+X = [[1, 2, 3, 2.5],
+     [2.0, 5.0, -1.0, 2.0],
+     [-1.5, 2.7, 3.3, -0.8]]
 
-layer_output = []
-for (neuron_bias, neuron_weights) in zip(biases, weights):
-    neuron_output = 0
-    for (n_input, weight) in zip(inputs, neuron_weights): 
-        neuron_output = neuron_output + (n_input * weight)
-    layer_output.append(neuron_output+neuron_bias)
+X, y = spiral_data(100, 3)
 
-print(layer_output)
+class Layer_Dense:
+    def __init__(self, n_inputs, n_neurons):
+        self.weights = 0.1 * np.random.randn(n_inputs, n_neurons) # No need of transpose
+        self.biases = np.zeros((1, n_neurons))
+    def forward(self, inputs):
+        self.output = np.dot(inputs, self.weights) + self.biases
+
+class Activation_ReLU:
+    def forward(self, inputs):
+        self.output = np.maximum(0, inputs)
+
+layer1 = Layer_Dense(2, 5)
+activation1 = Activation_ReLU()
+
+layer1.forward(X)
+activation1.forward(layer1.output)
+print(activation1.output)
